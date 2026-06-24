@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과학 빈칸 테스트: 지권의 변화 · 2학년 6반 최후의 1인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#0E5C3F; --green-d:#093F2B; --green-l:#13754F;
+  --ivory:#F6F4EC; --paper:#FFFFFF; --ink:#1A2421; --mute:#6B7670;
+  --gold:#E8B53D; --gold-d:#C7951E; --xp:#22C55E;
+  --ok:#15803D; --ok-bg:#E7F5EC; --no:#B91C1C; --no-bg:#FBEAEA;
+  --line:#E2E0D6; --lock:#B7B5AA;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ivory);color:var(--ink);
+  font-family:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;line-height:1.7}
+.han{font-family:'Black Han Sans','Noto Sans KR',sans-serif;font-weight:400;letter-spacing:.01em}
+.disp{font-family:'Gowun Batang',serif}
+button{font-family:inherit;cursor:pointer}
+.hidden{display:none!important}
+
+/* App header */
+header{background:linear-gradient(135deg,var(--green) 0%,var(--green-d) 70%);color:#fff;
+  padding:20px 18px 16px;position:relative;overflow:hidden}
+header::after{content:"🌋";position:absolute;right:14px;top:10px;font-size:64px;opacity:.12;transform:rotate(-15deg)}
+.title{font-size:24px;line-height:1.15;margin:0;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+.title b{color:var(--gold)}
+.by{font-size:12px;opacity:.82;margin-top:4px}
+.by b{color:var(--gold)}
+
+/* Player panel */
+.player{max-width:860px;margin:-10px auto 0;padding:0 16px;position:relative;z-index:2}
+.pcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px;
+  box-shadow:0 6px 18px rgba(14,92,63,.10)}
+.prow{display:flex;align-items:center;gap:12px}
+.badge{flex:0 0 auto;width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;color:#3a2c05;font-weight:900;box-shadow:0 3px 0 var(--gold-d)}
+.badge small{font-size:9px;line-height:1;opacity:.8}
+.badge b{font-size:20px;line-height:1}
+.pinfo{flex:1;min-width:0}
+.ptitle{font-weight:900;font-size:17px;color:var(--green)}
+.pstat{font-size:12px;color:var(--mute);margin-top:1px}
+.pstat .dot{color:var(--gold-d);font-weight:700}
+.xpwrap{margin-top:10px}
+.xpbar{height:12px;background:#EDEBDF;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.xpfill{height:100%;background:linear-gradient(90deg,var(--xp),#16A34A);width:0;transition:width .6s cubic-bezier(.2,.8,.2,1);border-radius:8px}
+.xptext{font-size:11px;color:var(--mute);margin-top:4px;display:flex;justify-content:space-between}
+
+main{max-width:860px;margin:0 auto;padding:14px 16px 90px}
+
+/* Finale banner */
+.finale-card{margin:14px 0 8px;border-radius:16px;padding:16px;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(120deg,#6D28D9,#9333EA)}
+.finale-card.locked{background:#D9D7CC;color:#7A786E}
+.finale-card h3{margin:0;font-size:19px}
+.finale-card p{margin:4px 0 12px;font-size:12.5px;opacity:.92}
+.finale-card .btn{background:#fff;color:#7C3AED;border:none;border-radius:10px;padding:10px 16px;font-weight:900;font-size:14px}
+.finale-card.locked .btn{background:#bbb9ad;color:#fff;cursor:not-allowed}
+.finale-card .fx{position:absolute;right:-6px;bottom:-14px;font-size:80px;opacity:.18}
+
+.sectionlabel{font-size:12px;font-weight:800;color:var(--mute);letter-spacing:.08em;margin:18px 2px 8px;text-transform:uppercase}
+.reviewbtn{float:right;font-size:11px;border:1px solid var(--line);background:#fff;color:var(--mute);border-radius:20px;padding:4px 11px;font-weight:700}
+.reviewbtn.on{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* World rows */
+.world{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin:0 0 10px;overflow:hidden}
+.world.locked{opacity:.6}
+.whead{display:flex;align-items:center;gap:10px;padding:13px 15px;cursor:pointer;user-select:none}
+.wno{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:var(--green);color:#fff;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center}
+.world.locked .wno{background:var(--lock)}
+.wtitle{flex:1;min-width:0}
+.wtitle b{font-size:15px;display:block}
+.wtitle small{font-size:11px;color:var(--mute)}
+.wmeta{font-size:12px;color:var(--gold-d);font-weight:800;white-space:nowrap}
+.wmeta .lk{color:var(--lock)}
+.chev{transition:transform .2s;color:var(--mute);font-size:13px}
+.world.open .chev{transform:rotate(90deg)}
+.stages{display:none;padding:4px 12px 14px;gap:8px;flex-wrap:wrap}
+.world.open .stages{display:flex}
+.stage{flex:1 1 calc(50% - 8px);min-width:200px;border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;background:#FBFAF4;
+  display:flex;align-items:center;gap:10px;cursor:pointer;transition:.12s}
+.stage:hover{border-color:var(--green-l);background:#fff}
+.stage.locked{opacity:.55;cursor:not-allowed;background:#F1F0E8}
+.stage .sno{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--green);background:#fff;border:1px solid var(--line);border-radius:7px;padding:2px 7px}
+.stage .stt{flex:1;font-size:13px;font-weight:600;line-height:1.3}
+.stage .stars{flex:0 0 auto;font-size:13px;letter-spacing:-1px;color:var(--gold)}
+.stage .stars .e{color:#D9D7CC}
+
+/* Quiz screen */
+#quiz .qbar{position:sticky;top:0;z-index:20;background:var(--ivory);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;padding:11px 16px}
+.backbtn{border:none;background:none;color:var(--green);font-weight:800;font-size:14px;padding:4px}
+.qbar .qh{flex:1;min-width:0}
+.qbar .qh b{font-size:15px;display:block;line-height:1.2}
+.qbar .qh small{font-size:11px;color:var(--mute)}
+.qbody{max-width:860px;margin:0 auto;padding:8px 16px 30px}
+.q{display:flex;gap:11px;padding:12px 2px;border-bottom:1px dashed var(--line)}
+.q:last-child{border-bottom:none}
+.qn{flex:0 0 auto;width:26px;height:26px;margin-top:1px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.qt{flex:1;font-size:15.5px}
+.blank{position:relative;display:inline-flex;align-items:center;vertical-align:baseline}
+.blank input{font-family:inherit;font-size:15px;text-align:center;color:var(--green-d);font-weight:700;border:none;
+  border-bottom:2px solid var(--green-l);background:#FBFAF4;min-width:64px;padding:1px 7px;margin:0 2px;border-radius:4px 4px 0 0}
+.blank input:focus{outline:none;background:#fff;border-bottom-color:var(--gold);box-shadow:0 2px 0 -1px var(--gold)}
+.blank input.ok{color:var(--ok);border-bottom-color:var(--ok);background:var(--ok-bg)}
+.blank input.no{color:var(--no);border-bottom-color:var(--no);background:var(--no-bg)}
+.ansnote{display:none;font-size:13px;font-weight:700;margin-left:3px;padding:0 5px;border-radius:5px;white-space:nowrap}
+.ansnote.show{display:inline-block;color:#fff;background:var(--green)}
+.ansnote.show::before{content:"정답 ";font-weight:400;opacity:.75;font-size:11px}
+.qfoot{position:sticky;bottom:0;background:linear-gradient(0deg,var(--ivory) 70%,transparent);padding:12px 16px;
+  max-width:860px;margin:0 auto;display:flex;gap:8px}
+.qfoot button{flex:1;border-radius:11px;padding:13px;font-weight:900;font-size:15px;border:1.5px solid var(--green)}
+.qfoot .ghost{background:#fff;color:var(--green);flex:0 0 auto;padding:13px 16px}
+.qfoot .go{background:var(--green);color:#fff}
+.qfoot .go:hover{background:var(--green-d)}
+
+/* Modal */
+.scrim{position:fixed;inset:0;background:rgba(9,40,30,.55);display:flex;align-items:center;justify-content:center;
+  z-index:60;padding:18px;opacity:0;pointer-events:none;transition:.2s}
+.scrim.show{opacity:1;pointer-events:auto}
+.modal{background:#fff;border-radius:20px;max-width:380px;width:100%;padding:24px 22px;text-align:center;
+  transform:scale(.92);transition:.2s;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.scrim.show .modal{transform:scale(1)}
+.modal .bigstars{font-size:40px;letter-spacing:2px;color:var(--gold)}
+.modal .bigstars .e{color:#E4E2D6}
+.modal h2{margin:6px 0 2px;font-size:22px}
+.modal .acc{font-size:14px;color:var(--mute)}
+.modal .xpget{margin:14px auto;background:var(--ok-bg);color:var(--ok);font-weight:900;font-size:16px;border-radius:12px;padding:10px;max-width:220px}
+.modal .xpget.none{background:#F1F0E8;color:var(--mute)}
+.lvlup{margin:10px auto;background:linear-gradient(90deg,var(--gold),var(--gold-d));color:#3a2c05;font-weight:900;
+  padding:10px;border-radius:12px;font-size:15px;animation:pop .4s}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.modal .mbtns{display:flex;gap:8px;margin-top:6px}
+.modal .mbtns button{flex:1;border-radius:11px;padding:12px;font-weight:800;font-size:14px;border:1.5px solid var(--green)}
+.modal .mbtns .sec{background:#fff;color:var(--green)}
+.modal .mbtns .pri{background:var(--green);color:#fff}
+
+/* Finale */
+#finale{position:fixed;inset:0;background:linear-gradient(160deg,#2E1065,#4C1D95 60%,#5B21B6);color:#fff;z-index:55;
+  display:flex;flex-direction:column;padding:18px;overflow:auto}
+#finale .ftop{display:flex;align-items:center;gap:10px;max-width:640px;margin:0 auto;width:100%}
+#finale .lives{font-size:20px;letter-spacing:1px}
+#finale .fprog{flex:1;font-weight:800;font-size:14px;opacity:.9}
+#finale .fscore{font-weight:900;font-size:15px;background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+#finale .fclose{border:none;background:rgba(255,255,255,.15);color:#fff;border-radius:10px;padding:7px 12px;font-weight:800}
+#finale .fcard{max-width:640px;margin:auto;width:100%;background:rgba(255,255,255,.97);color:var(--ink);
+  border-radius:20px;padding:26px 22px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+#finale .qlabel{font-size:12px;font-weight:800;color:#7C3AED;letter-spacing:.05em}
+#finale .ftext{font-size:19px;line-height:1.6;margin:10px 0 18px;font-weight:500}
+#finale .ftext .blank input{font-size:18px;min-width:90px;border-bottom-color:#7C3AED}
+#finale .ftext .blank input:focus{box-shadow:0 2px 0 -1px #7C3AED;border-bottom-color:#7C3AED}
+#finale .fsubmit{width:100%;background:#7C3AED;color:#fff;border:none;border-radius:12px;padding:14px;font-weight:900;font-size:16px}
+#finale .fend{text-align:center}
+#finale .fend .big{font-size:54px}
+#finale .fend h2{font-size:26px;margin:6px 0}
+#finale .fend .rank{font-size:18px;font-weight:900;color:#7C3AED;background:#fff;display:inline-block;padding:8px 18px;border-radius:30px;margin:8px 0}
+#finale .fend button{margin-top:14px;background:#fff;color:#7C3AED;border:none;border-radius:12px;padding:13px 22px;font-weight:900;font-size:15px}
+.flash{animation:flash .5s}
+@keyframes flash{0%{background:#fff}30%{background:var(--no-bg)}100%{background:#fff}}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--green-d);color:#fff;
+  padding:12px 22px;border-radius:30px;font-weight:800;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{max-width:860px;margin:0 auto;padding:0 16px 36px;color:var(--mute);font-size:11px;text-align:center}
+@media(max-width:560px){.title{font-size:20px}.stage{flex-basis:100%}.qt{font-size:15px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- HOME / MAP -->
+<div id="home">
+  <header>
+    <h1 class="title han">중2 과학 2단원 · 지권의 변화<br><b>2학년 6반 최후의 1인</b></h1>
+    <div class="by">배포 <b>한도윤</b> · 골든벨 서바이벌 · 빈칸 140개</div>
+  </header>
+  <div class="player">
+    <div class="pcard">
+      <div class="prow">
+        <div class="badge"><small>LV</small><b id="pLv">1</b></div>
+        <div class="pinfo">
+          <div class="ptitle" id="pTitle">지층 새내기</div>
+          <div class="pstat"><span class="dot">★ <b id="pStars">0</b></span> &nbsp;·&nbsp; 클리어 <b id="pClear">0</b>/<b id="pTotal">10</b> 스테이지</div>
+        </div>
+      </div>
+      <div class="xpwrap">
+        <div class="xpbar"><div class="xpfill" id="xpFill"></div></div>
+        <div class="xptext"><span id="xpNow">0 XP</span><span id="xpNext">다음 레벨까지 600</span></div>
+      </div>
+    </div>
+  </div>
+  <main>
+    <div id="finaleCard"></div>
+    <div class="sectionlabel">퀘스트 지도
+      <button class="reviewbtn" id="reviewBtn">🔓 복습 모드</button>
+    </div>
+    <div id="worlds"></div>
+  </main>
+  <footer>틀려도 목숨 안 깎임(복습용) · 결승전만 목숨 3개 · 진행상황은 이 기기에 저장됩니다<br>© AXISOLVE · 과학 2단원 「지권의 변화」 최상위 공략 기반</footer>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="hidden">
+  <div class="qbar">
+    <button class="backbtn" onclick="goHome()">← 지도</button>
+    <div class="qh"><b id="qTitle"></b><small id="qSub"></small></div>
+  </div>
+  <div class="qbody" id="qBody"></div>
+  <div class="qfoot">
+    <button class="ghost" id="revealBtn" onclick="toggleReveal()">정답</button>
+    <button class="go" onclick="gradeStage()">도전 완료!</button>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
+
+<!-- FINALE -->
+<div id="finale" class="hidden"></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BANK = {
+"2-1":{short:"지구계와 지구 내부",pages:[
+{no:"1쪽",title:"지구계의 구성 요소",items:[
+`지구상의 모든 물이 분포하는 영역을 [[수권]]이라 한다.`,
+`지구를 둘러싼 대기를 [[기권]]이라 한다.`,
+`지구의 표면과 내부를 모두 포함하는 영역을 [[지권]]이라 한다.`,
+`지구상의 모든 생물체와 그 분포 영역을 [[생물권]]이라 한다.`,
+`기권 바깥의 우주 공간을 [[외권]]이라 한다.`,
+`지구계 구성 요소 중 가장 큰 부피를 차지하는 것은 [[지권]]이다.`,
+`지권은 변화가 가장 [[느리지만]] 다른 권에 큰 영향을 미친다.`,
+`수권 중 육수에서 가장 많은 양을 차지하는 것은 [[빙하]]이다.`,
+`생물권은 기권, 지권, 수권과 공간적으로 [[겹친다]].`,
+`기권은 주로 질소와 [[산소]]로 구성된다.`,
+`기권을 이루는 기체는 지표면으로부터 약 [[1000]]km까지 분포한다.`,
+`외권에서 높은 에너지 입자가 도넛 모양으로 지구를 둘러싼 공간을 [[밴앨런대]]라 한다.`,
+`외권의 [[전리층]]은 지구에서 전파 통신이 이루어지게 한다.`,
+`수권의 해수는 순환하며 저위도의 [[에너지]]를 고위도로 수송한다.`,
+`생명체가 살아가는 데 필요한 공간과 물질을 대부분 제공하는 권은 지권과 [[수권]]이다.`
+]},
+{no:"2쪽",title:"지구 내부 구조",items:[
+`지구 내부는 지각, 맨틀, 외핵, [[내핵]]의 4개 층으로 구분된다.`,
+`지구의 가장 바깥층으로 가장 얇은 층은 [[지각]]이다.`,
+`지구 내부에서 가장 큰 부피를 차지하는 층은 [[맨틀]]이다.`,
+`맨틀은 유동성이 있는 [[고체]] 상태이다.`,
+`액체 상태로 추정되는 층은 [[외핵]]이다.`,
+`내핵은 온도와 압력이 매우 높지만 [[고체]] 상태로 추정된다.`,
+`외핵과 내핵은 주로 철과 [[니켈]]로 이루어져 있다.`,
+`지각과 맨틀의 경계면을 [[모호면|모호로비치치 불연속면]]이라 한다.`,
+`모호면을 경계로 윗부분을 [[지각]], 아랫부분을 맨틀이라 한다.`,
+`모호면의 위치는 해양 지각보다 [[대륙]] 지각에서 더 깊다.`,
+`맨틀과 외핵의 경계면을 [[구텐베르크면]]이라 한다.`,
+`외핵과 내핵의 경계면을 [[레만면]]이라 한다.`,
+`대륙 지각은 주로 [[화강암질]] 암석으로 되어 있다.`,
+`해양 지각은 주로 [[현무암질]] 암석으로 되어 있다.`,
+`밀도를 비교하면 대륙 지각보다 해양 지각이 더 [[크다]].`,
+`대륙 지각은 해양 지각보다 두께가 [[두껍다]].`
+]},
+{no:"3쪽",title:"판의 구조",items:[
+`지각과 상부 맨틀의 일부를 포함하는 단단한 암석층을 [[판]]이라 한다.`,
+`판의 두께는 약 [[100]]km이다.`,
+`판은 [[암석권]]이라고도 한다.`,
+`판 아래에서 유동성이 있어 대류가 일어나는 부분을 [[연약권]]이라 한다.`,
+`대륙 지각을 포함한 판을 [[대륙판]]이라 한다.`,
+`해양 지각을 포함한 판을 [[해양판]]이라 한다.`,
+`대륙판은 해양판보다 두께가 [[두껍다]].`,
+`대륙판은 해양판보다 밀도가 [[작다]].`,
+`판은 연약권 위를 1년에 수 [[cm]]씩 이동한다.`,
+`여러 판들의 이동 방향과 속도는 서로 [[다르다]].`,
+`지구의 표면은 여러 개의 크고 작은 [[판]]으로 이루어져 있다.`,
+`맨틀 전체는 [[고체]] 상태이며 일부만 유동성을 가진다.`
+]}
+]},
+"2-2":{short:"광물과 암석",pages:[
+{no:"1쪽",title:"광물의 성질과 구별",items:[
+`암석을 이루는 알갱이를 [[광물]]이라 한다.`,
+`광물의 단단하고 무른 정도를 [[굳기]]라 한다.`,
+`굳기가 다른 두 광물을 서로 긁으면 긁히는 광물이 더 [[무른]] 광물이다.`,
+`광물 가루의 색을 [[조흔색]]이라 한다.`,
+`조흔색은 [[초벌구이 도자기판|조흔판]]에 긁어서 확인한다.`,
+`자석에 붙는 성질을 [[자성]]이라 한다.`,
+`자성이 있는 대표적인 광물은 [[자철석]]이다.`,
+`묽은 염산을 떨어뜨리면 거품이 발생하는 광물은 [[방해석]]이다.`,
+`방해석에 묽은 염산을 떨어뜨리면 [[이산화 탄소]] 기체가 발생한다.`,
+`황동석, 황철석, 금은 겉보기 색이 비슷해 [[조흔색]]으로 구별한다.`,
+`자철석과 적철석은 자성이나 [[조흔색]]으로 구별한다.`,
+`자철석의 조흔색은 검은색, 적철석의 조흔색은 [[붉은색]]이다.`,
+`석영과 방해석은 [[굳기]]나 염산 반응으로 구별한다.`,
+`모스 굳기계에서 숫자가 클수록 더 [[단단한]] 광물이다.`,
+`금강석, 석영, 인회석, 활석 중 가장 단단한 것은 [[금강석]]이다.`
+]},
+{no:"2쪽",title:"조암광물과 화성암",items:[
+`암석을 이루는 주된 광물을 [[조암광물]]이라 한다.`,
+`조암광물 중 부피비가 가장 큰 것은 [[장석]]이다.`,
+`휘석, 감람석, 각섬석, 흑운모는 [[어두운색]] 광물이다.`,
+`석영과 장석은 대표적인 [[밝은색]] 광물이다.`,
+`철과 마그네슘을 많이 포함할수록 [[어두운색]]을 띤다.`,
+`마그마가 식어 굳어진 암석을 [[화성암]]이라 한다.`,
+`마그마가 지표 부근에서 빠르게 식어 결정이 작은 암석을 [[화산암]]이라 한다.`,
+`마그마가 지하 깊은 곳에서 천천히 식어 결정이 큰 암석을 [[심성암]]이라 한다.`,
+`화산암 중 밝은색 암석은 [[유문암]]이다.`,
+`화산암 중 어두운색 암석은 [[현무암]]이다.`,
+`심성암 중 밝은색 암석은 [[화강암]]이다.`,
+`심성암 중 어두운색 암석은 [[반려암]]이다.`,
+`돌하르방과 맷돌을 만드는 데 쓰는 암석은 [[현무암]]이다.`,
+`현무암에는 철과 [[마그네슘]]이 많이 포함되어 있다.`,
+`마그마가 천천히 식을수록 광물 결정의 크기가 [[커진다]].`
+]},
+{no:"3쪽",title:"퇴적암과 변성암",items:[
+`퇴적물이 쌓여 다져지고 굳어져 만들어진 암석을 [[퇴적암]]이라 한다.`,
+`자갈이 굳어진 퇴적암은 [[역암]]이다.`,
+`모래가 굳어진 퇴적암은 [[사암]]이다.`,
+`진흙이 굳어진 퇴적암은 [[셰일]]이다.`,
+`석회 물질, 산호, 조개껍데기가 쌓여 만들어진 퇴적암은 [[석회암]]이다.`,
+`화산재가 쌓여 굳어진 퇴적암은 [[응회암]]이다.`,
+`퇴적물이 쌓여 나타나는 나란한 줄무늬를 [[층리]]라 한다.`,
+`퇴적암에서 발견되는 과거 생물의 흔적을 [[화석]]이라 한다.`,
+`높은 열과 압력을 받아 성질이 변한 암석을 [[변성암]]이라 한다.`,
+`변성암에서 압력의 수직 방향으로 광물이 배열된 줄무늬를 [[엽리]]라 한다.`,
+`석회암이 변성되면 [[대리암]]이 된다.`,
+`사암이 변성되면 [[규암]]이 된다.`,
+`셰일(이암)이 열을 받아 변성되면 [[혼펠스]]가 된다.`,
+`화강암이 변성되면 [[편마암]]이 된다.`,
+`변성 작용으로 광물 결정의 크기가 커지는 것을 [[재결정]] 작용이라 한다.`,
+`대리암은 무늬가 아름다워 조각이나 건물 [[장식]]에 이용된다.`
+]},
+{no:"4쪽",title:"암석의 순환",items:[
+`암석이 환경 변화에 따라 끊임없이 다른 암석으로 변하는 과정을 [[암석의 순환]]이라 한다.`,
+`마그마가 식으면 [[화성암]]이 만들어진다.`,
+`퇴적물이 다져지고 굳어지면 [[퇴적암]]이 만들어진다.`,
+`암석이 높은 열과 압력을 받으면 [[변성암]]이 만들어진다.`,
+`암석이 잘게 부서지고 운반되는 작용을 풍화·[[침식]]이라 한다.`,
+`암석이 녹으면 [[마그마]]가 된다.`,
+`화석이 발견될 가능성이 높은 암석은 [[퇴적암]]이다.`,
+`층리가 나타나는 암석은 [[퇴적암]]이다.`,
+`엽리가 나타나는 암석은 [[변성암]]이다.`,
+`화강암과 현무암은 모두 [[화성암]]에 속한다.`,
+`규암, 대리암, 편마암은 모두 [[변성암]]에 속한다.`,
+`역암, 사암, 셰일, 석회암은 모두 [[퇴적암]]에 속한다.`
+]}
+]},
+"2-3":{short:"풍화·토양·지각 변동",pages:[
+{no:"1쪽",title:"풍화 작용",items:[
+`암석이 잘게 부서지거나 성분이 변하는 현상을 [[풍화]] 작용이라 한다.`,
+`암석이 잘게 부서지는 풍화를 [[기계적 풍화]]라 한다.`,
+`암석의 성분이 변하는 풍화를 [[화학적 풍화]]라 한다.`,
+`암석 틈의 물이 얼면서 부피가 늘어 암석을 부수는 것은 [[기계적 풍화]]이다.`,
+`식물 뿌리가 자라며 암석 틈을 벌리는 것은 [[기계적 풍화]]이다.`,
+`공기 중 산소가 광물의 성분을 변화시키는 것은 [[화학적 풍화]]이다.`,
+`지하수가 석회암을 녹여 석회 동굴을 만드는 것은 [[화학적 풍화]]이다.`,
+`기계적 풍화는 기온의 [[일교차]]가 큰 한랭 건조한 지역에서 잘 일어난다.`,
+`화학적 풍화는 기온이 높고 강수량이 많은 [[고온 다습]]한 지역에서 잘 일어난다.`,
+`암석이 잘게 부서질수록 [[표면적]]이 커져 풍화가 잘 일어난다.`,
+`석회암은 산성 물질에 의해 풍화가 잘 일어나며 묽은 [[염산]]과 반응한다.`,
+`석회암이 묽은 염산과 반응하면 [[이산화 탄소]]가 발생한다.`,
+`석회암 조각보다 [[가루]]일 때 풍화가 더 잘 일어난다.`,
+`증류수보다 [[묽은 염산]]을 넣었을 때 석회암의 질량 변화가 크다.`
+]},
+{no:"2쪽",title:"토양의 생성",items:[
+`암석이 풍화되어 만들어진 흙을 [[토양]]이라 한다.`,
+`풍화를 받지 않은 단단한 암석층을 [[기반암]]이라 한다.`,
+`암석 조각과 모래로 이루어져 영양분이 적은 층을 [[모질물]]이라 한다.`,
+`생물 활동이 가장 활발하고 부식토가 있는 겉흙 층을 [[표토]]라 한다.`,
+`표토에서 녹은 물질과 진흙이 내려와 쌓인 층을 [[심토]]라 한다.`,
+`토양의 생성 순서는 기반암 → 모질물 → 표토 → [[심토]]이다.`,
+`가장 먼저 풍화되어 토양의 바탕이 되는 층은 [[기반암]]이다.`,
+`가장 나중에 생성되는 층은 [[심토]]이다.`,
+`생물의 유해가 썩어 생긴 부식토가 많은 층은 [[표토]]이다.`,
+`성숙한 토양일수록 [[심토]]가 발달한다.`,
+`심토는 비가 많이 오는 지역일수록 [[두껍게]] 발달한다.`,
+`죽은 생물체가 분해되어 생긴 물질을 [[유기물]]이라 한다.`
+]},
+{no:"3쪽",title:"판의 운동과 지진·화산",items:[
+`지진과 화산 활동은 주로 판의 [[경계]]에서 일어난다.`,
+`지진이 자주 발생하는 지역을 [[지진대]]라 한다.`,
+`화산 활동이 활발한 지역을 [[화산대]]라 한다.`,
+`지진대와 화산대는 판의 경계와 대체로 [[일치]]한다.`,
+`태평양 가장자리를 고리 모양으로 둘러싼 지진·화산대를 [[불의 고리|환태평양 지진대]]라 한다.`,
+`지진대의 분포 면적은 화산대의 분포 면적보다 [[넓다]].`,
+`지진이 발생해도 반드시 화산 활동이 일어나지는 [[않는다]].`,
+`해양판과 대륙판이 부딪히면 주로 해구와 [[호상 열도]]가 형성된다.`,
+`대륙판과 대륙판이 충돌하면 [[습곡 산맥]]이 형성된다.`,
+`히말라야산맥은 판이 충돌하여 형성된 [[습곡 산맥]]이다.`,
+`우리나라는 [[유라시아]]판 내부에 위치한다.`,
+`화산이 분출하면 용암, 화산 가스, 화산 [[쇄설물]] 등이 나온다.`,
+`전 세계에서 지진과 화산이 가장 활발한 곳은 [[태평양]] 주변부이다.`
+]}
+]},
+};
+const order=["2-1","2-2","2-3"];
+
+/* ===== utils ===== */
+const $=(s,r=document)=>r.querySelector(s);
+function norm(s){return (s||'').trim().toLowerCase().replace(/\s+/g,'').replace(/[''`]/g,"'").replace(/[（）()]/g,'');}
+function parse(text){
+  const answers=[];let i=0;
+  const html=text.replace(/\[\[(.+?)\]\]/g,(m,grp)=>{
+    const alts=grp.split('|').map(s=>s.trim());const idx=i++;answers.push(alts);
+    const w=Math.max(64,Math.min(190,alts[0].length*17+30));
+    return `<span class="blank"><input data-i="${idx}" style="width:${w}px" autocomplete="off" autocapitalize="off" spellcheck="false"><span class="ansnote" data-i="${idx}">${alts[0]}</span></span>`;
+  });
+  return {html,answers};
+}
+
+/* ===== build flat stage list ===== */
+const STAGES=[];           // {id, lesson, pi, no, title, items, count}
+const LESSONS=[];          // {key, short, stages:[idx...]}
+order.forEach(k=>{
+  const d=BANK[k];const grp={key:k,short:d.short,stages:[]};
+  d.pages.forEach((pg,pi)=>{
+    let count=0;pg.items.forEach(it=>count+=(it.match(/\[\[.+?\]\]/g)||[]).length);
+    const id=k+'#'+pi;
+    STAGES.push({id,lesson:k,pi,no:pg.no,title:pg.title,items:pg.items,count});
+    grp.stages.push(STAGES.length-1);
+  });
+  LESSONS.push(grp);
+});
+const TOTAL_STAGES=STAGES.length;
+function stageById(id){return STAGES.find(s=>s.id===id);}
+
+/* ===== progress / persistence ===== */
+const SAVEKEY='msc_geo_2_6_v1';
+let P={best:{},finaleBest:0,review:false};
+function load(){try{const r=localStorage.getItem(SAVEKEY);if(r)P=Object.assign(P,JSON.parse(r));}catch(e){}}
+function save(){try{localStorage.setItem(SAVEKEY,JSON.stringify(P));}catch(e){}}
+load();
+
+/* ===== scoring / level ===== */
+function starsOf(id){const s=stageById(id);const b=P.best[id]||0;const acc=b/s.count;
+  if(acc>=0.95)return 3;if(acc>=0.8)return 2;if(acc>=0.6)return 1;return 0;}
+function clearedCount(){return STAGES.filter(s=>starsOf(s.id)>=1).length;}
+function totalStars(){return STAGES.reduce((a,s)=>a+starsOf(s.id),0);}
+function totalXP(){
+  let xp=0;STAGES.forEach(s=>{xp+=(P.best[s.id]||0)*10;xp+=starsOf(s.id)*100;});
+  xp+=(P.finaleBest||0)*15;return xp;}
+const LV=[
+  {xp:0,t:'지층 새내기'},{xp:300,t:'광물 견습생'},{xp:700,t:'암석 수집가'},
+  {xp:1100,t:'풍화 탐험가'},{xp:1600,t:'화성암 감별사'},{xp:2200,t:'변성암 분석가'},
+  {xp:2800,t:'지구 속 탐사대'},{xp:3400,t:'판 구조 추적자'},{xp:4000,t:'2-6 지질 패왕'},
+  {xp:4600,t:'지권의 지배자 👑'}
+];
+function levelInfo(xp){
+  let lv=1;for(let i=0;i<LV.length;i++){if(xp>=LV[i].xp)lv=i+1;}
+  const cur=LV[lv-1];const next=LV[lv]||null;
+  const prog=next?Math.min(1,(xp-cur.xp)/(next.xp-cur.xp)):1;
+  return {lv,title:cur.t,curXp:cur.xp,nextXp:next?next.xp:cur.xp,prog,max:!next};
+}
+function lessonUnlocked(li){
+  if(P.review||li===0)return true;
+  const prev=LESSONS[li-1];const cl=prev.stages.filter(i=>starsOf(STAGES[i].id)>=1).length;
+  return cl/prev.stages.length>=0.6;
+}
+function finaleUnlocked(){return STAGES.every(s=>starsOf(s.id)>=1);}
+
+/* ===== render player ===== */
+function renderPlayer(){
+  const xp=totalXP();const L=levelInfo(xp);
+  $('#pLv').textContent=L.lv;$('#pTitle').textContent=L.title;
+  $('#pStars').textContent=totalStars();$('#pClear').textContent=clearedCount();var _pt=$('#pTotal');if(_pt)_pt.textContent=TOTAL_STAGES;
+  $('#xpFill').style.width=(L.prog*100)+'%';
+  $('#xpNow').textContent=xp.toLocaleString()+' XP';
+  $('#xpNext').textContent=L.max?'최고 레벨 달성!':('다음 레벨까지 '+(L.nextXp-xp).toLocaleString());
+}
+
+/* ===== render finale card ===== */
+function renderFinale(){
+  const open=finaleUnlocked();
+  $('#finaleCard').innerHTML=
+    `<div class="finale-card ${open?'':'locked'}">
+       <span class="fx">🔔</span>
+       <h3 class="han">👑 최후의 1인 골든벨</h3>
+       <p>${open?'전 스테이지 클리어 완료! 랜덤 30문제 서바이벌. 목숨 3개, 최후까지 살아남아라.':'모든 스테이지를 ★ 1개 이상으로 클리어하면 열립니다. ('+clearedCount()+'/'+TOTAL_STAGES+')'}</p>
+       <button class="btn" ${open?'onclick="startFinale()"':''}>${open?'결승전 입장':'🔒 잠김'}</button>
+     </div>`;
+}
+
+/* ===== render worlds/map ===== */
+function renderWorlds(){
+  const el=$('#worlds');
+  el.innerHTML=LESSONS.map((g,li)=>{
+    const unlocked=lessonUnlocked(li);
+    const cl=g.stages.filter(i=>starsOf(STAGES[i].id)>=1).length;
+    const st=g.stages.reduce((a,i)=>a+starsOf(STAGES[i].id),0);
+    const maxst=g.stages.length*3;
+    const chips=g.stages.map(i=>{
+      const s=STAGES[i];const stars=starsOf(s.id);
+      const slocked=!unlocked;
+      const star=`<span class="stars">${'★'.repeat(stars)}<span class="e">${'★'.repeat(3-stars)}</span></span>`;
+      return `<div class="stage ${slocked?'locked':''}" ${slocked?'':`onclick="openStage('${s.id}')"`}>
+        <span class="sno">${s.no}</span><span class="stt">${s.title}</span>${slocked?'<span class="stars">🔒</span>':star}</div>`;
+    }).join('');
+    return `<div class="world ${unlocked?'':'locked'}" data-li="${li}">
+      <div class="whead" onclick="toggleWorld(${li})">
+        <div class="wno">${li+1}</div>
+        <div class="wtitle"><b>${g.short}</b><small>${g.key} · ${g.stages.length}개 스테이지</small></div>
+        <div class="wmeta">${unlocked?`★${st}/${maxst} · ${cl}/${g.stages.length}`:'<span class="lk">🔒 잠김</span>'}</div>
+        <span class="chev">▶</span>
+      </div>
+      <div class="stages">${chips}</div>
+    </div>`;
+  }).join('');
+}
+function s_label(li){const names={'1-1':'1단원','2-1':'2단원','2-2':'2단원','2-3':'2단원','3-1':'3단원','3-2':'3단원','3-3':'3단원','4-1':'4단원','4-2':'4단원','4-3':'4단원'};return names[LESSONS[li].key]||'';}
+let openWorld=0;
+function toggleWorld(li){
+  const w=document.querySelector(`.world[data-li="${li}"]`);
+  if(!w)return;
+  if(!lessonUnlocked(li)){toast('이전 단원을 60% 이상 클리어하면 열려요 🔒');return;}
+  document.querySelectorAll('.world.open').forEach(x=>{if(x!==w)x.classList.remove('open')});
+  w.classList.toggle('open');
+}
+
+/* ===== quiz ===== */
+let curStage=null,revealed=false;
+function openStage(id){
+  curStage=stageById(id);revealed=false;
+  $('#qTitle').textContent=curStage.title;
+  $('#qSub').textContent=`${curStage.lesson} · ${curStage.no} · 빈칸 ${curStage.count}개`;
+  $('#qBody').innerHTML=curStage.items.map((it,qi)=>{
+    const p=parse(it);
+    return `<div class="q"><div class="qn">${qi+1}</div><div class="qt" data-ans='${JSON.stringify(p.answers)}'>${p.html}</div></div>`;
+  }).join('');
+  $('#revealBtn').textContent='정답';
+  $('#home').classList.add('hidden');$('#quiz').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+function goHome(){
+  $('#quiz').classList.add('hidden');$('#home').classList.remove('hidden');
+  refresh();
+}
+function toggleReveal(){
+  revealed=!revealed;
+  document.querySelectorAll('#qBody .qt').forEach(qt=>{
+    const ans=JSON.parse(qt.dataset.ans);
+    qt.querySelectorAll('input').forEach(inp=>{
+      const note=qt.querySelector('.ansnote[data-i="'+inp.dataset.i+'"]');
+      if(revealed){note.classList.add('show');inp.placeholder=ans[+inp.dataset.i][0];}
+      else{note.classList.remove('show');inp.placeholder='';}
+    });
+  });
+  $('#revealBtn').textContent=revealed?'숨기기':'정답';
+}
+function gradeStage(){
+  let total=0,ok=0;
+  document.querySelectorAll('#qBody .qt').forEach(qt=>{
+    const ans=JSON.parse(qt.dataset.ans);
+    qt.querySelectorAll('input').forEach(inp=>{
+      total++;const alts=ans[+inp.dataset.i].map(norm);
+      const note=qt.querySelector('.ansnote[data-i="'+inp.dataset.i+'"]');
+      inp.classList.remove('ok','no');note.classList.remove('show');
+      if(norm(inp.value)!=='' && alts.includes(norm(inp.value))){inp.classList.add('ok');ok++;}
+      else{inp.classList.add('no');note.classList.add('show');}
+    });
+  });
+  const before=totalXP(),beforeLv=levelInfo(before).lv;
+  const prevBest=P.best[curStage.id]||0;
+  if(ok>prevBest){P.best[curStage.id]=ok;save();}
+  const after=totalXP(),afterLv=levelInfo(after).lv;
+  showResult(ok,total,after-before,afterLv>beforeLv?afterLv:0);
+}
+function showResult(ok,total,gain,lvUp){
+  const acc=Math.round(ok/total*100);
+  const stars=acc>=95?3:acc>=80?2:acc>=60?1:0;
+  const starHtml='★'.repeat(stars)+`<span class="e">${'★'.repeat(3-stars)}</span>`;
+  const msg=stars===3?'완벽! 다 뿌셨다 🔥':stars===2?'좋아, 거의 다 왔어!':stars===1?'클리어! 한 번 더 노려보자':'아직이야, 정답 보고 다시!';
+  const idx=STAGES.indexOf(curStage);const nextS=STAGES[idx+1];
+  const nextOk=nextS && lessonUnlocked(LESSONS.findIndex(g=>g.key===nextS.lesson));
+  $('#modal').innerHTML=
+    `<div class="bigstars">${starHtml}</div>
+     <h2 class="han">${ok} / ${total} 정답</h2>
+     <div class="acc">정답률 ${acc}% · ${msg}</div>
+     ${lvUp?`<div class="lvlup">🎉 LEVEL UP! Lv.${lvUp} ${LV[lvUp-1].t}</div>`:''}
+     <div class="xpget ${gain>0?'':'none'}">${gain>0?'+'+gain+' XP':'기록 갱신 없음'}</div>
+     <div class="mbtns">
+       <button class="sec" onclick="closeModal();openStage('${curStage.id}')">다시</button>
+       ${nextS?`<button class="pri" onclick="closeModal();${nextOk?`openStage('${nextS.id}')`:`goHome()`}">${nextOk?'다음 ▶':'지도로'}</button>`:`<button class="pri" onclick="closeModal();goHome()">지도로</button>`}
+     </div>`;
+  $('#scrim').classList.add('show');
+  if(lvUp)toast('🎉 레벨 업! Lv.'+lvUp+' '+LV[lvUp-1].t);
+}
+function closeModal(){$('#scrim').classList.remove('show');}
+
+/* ===== finale (golden bell) ===== */
+let F=null;
+function startFinale(){
+  if(!finaleUnlocked())return;
+  const pool=[];
+  STAGES.forEach(s=>s.items.forEach(it=>{if((it.match(/\[\[.+?\]\]/g)||[]).length===1)pool.push(it);}));
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  F={qs:pool.slice(0,30),idx:0,lives:3,score:0};
+  $('#finale').classList.remove('hidden');renderFinaleQ();
+}
+function renderFinaleQ(){
+  if(F.idx>=F.qs.length||F.lives<=0){return finaleEnd();}
+  const p=parse(F.qs[F.idx]);
+  $('#finale').innerHTML=
+    `<div class="ftop">
+       <span class="lives">${'❤️'.repeat(F.lives)}${'🤍'.repeat(3-F.lives)}</span>
+       <span class="fprog">${F.idx+1} / ${F.qs.length}</span>
+       <span class="fscore">🔔 ${F.score}</span>
+       <button class="fclose" onclick="quitFinale()">나가기</button>
+     </div>
+     <div class="fcard" id="fcard">
+       <div class="qlabel">최후의 1인 골든벨</div>
+       <div class="ftext" data-ans='${JSON.stringify(p.answers)}'>${p.html}</div>
+       <button class="fsubmit" onclick="finaleSubmit()">제출 ⏎</button>
+     </div>`;
+  const inp=$('#finale input');if(inp){inp.focus();inp.addEventListener('keydown',e=>{if(e.key==='Enter')finaleSubmit();});}
+}
+function finaleSubmit(){
+  const t=$('#finale .ftext');const ans=JSON.parse(t.dataset.ans);
+  const inp=t.querySelector('input');const alts=ans[0].map(norm);
+  const correct=norm(inp.value)!=='' && alts.includes(norm(inp.value));
+  inp.classList.add(correct?'ok':'no');
+  const note=t.querySelector('.ansnote');note.classList.add('show');
+  if(correct){F.score++;}else{F.lives--;$('#fcard').classList.add('flash');}
+  $('#finale .fscore').textContent='🔔 '+F.score;
+  $('#finale .lives').innerHTML='❤️'.repeat(Math.max(0,F.lives))+'🤍'.repeat(3-Math.max(0,F.lives));
+  $('#finale .fsubmit').textContent=correct?'정답! 다음 ▶':'땡! 다음 ▶';
+  $('#finale .fsubmit').onclick=()=>{F.idx++;renderFinaleQ();};
+}
+function finaleEnd(){
+  if(F.score>(P.finaleBest||0)){P.finaleBest=F.score;save();}
+  const win=F.lives>0 && F.idx>=F.qs.length;
+  const rank=F.score>=28?'최후의 1인 👑':F.score>=22?'2-6 지질 패왕':F.score>=15?'골든벨 준결승급':F.score>=8?'성장하는 도전자':'다음엔 더 멀리';
+  $('#finale').innerHTML=
+    `<div class="fcard fend">
+       <div class="big">${win?'👑':F.score>=15?'🔔':'💪'}</div>
+       <h2 class="han">${win?'최후의 1인 등극!':'골든벨 종료'}</h2>
+       <div>30문제 중 <b>${F.score}</b>문제 정답</div>
+       <div class="rank">${rank}</div>
+       <div><button onclick="startFinale()">다시 도전</button> <button onclick="quitFinale()">지도로</button></div>
+     </div>`;
+}
+function quitFinale(){$('#finale').classList.add('hidden');refresh();}
+
+/* ===== misc ===== */
+let to;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(to);to=setTimeout(()=>t.classList.remove('show'),2000);}
+$('#reviewBtn').onclick=()=>{P.review=!P.review;save();$('#reviewBtn').classList.toggle('on',P.review);toast(P.review?'복습 모드 ON · 전체 잠금 해제':'복습 모드 OFF');refresh();};
+function refresh(){renderPlayer();renderFinale();renderWorlds();
+  const w=document.querySelector(`.world[data-li="${openWorld}"]`);if(w&&lessonUnlocked(openWorld))w.classList.add('open');
+  $('#reviewBtn').classList.toggle('on',P.review);}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&!$('#quiz').classList.contains('hidden'))gradeStage();});
+
+refresh();
+</script>
+</body>
+</html>
